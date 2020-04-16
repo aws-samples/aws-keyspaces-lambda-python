@@ -1,0 +1,8 @@
+.env
+.idea
+.DS_Store
+lambda/.dist/
+*.egg-info
+cdk.out
+__pycache__
+tmp
