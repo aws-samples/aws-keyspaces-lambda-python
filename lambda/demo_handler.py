@@ -39,12 +39,12 @@ def do_get(country_name):
     response = []
     for city in cities:
         response.append({'country':city.country, 'city_name':city.city_name, 'population': city.population})
-    return response
+    return json.dumps(response)
 
 def do_upsert(body):
     stmt = session.prepare("INSERT INTO cassandra_demo.country_cities (country, city_name, population) VALUES (?, ?, ?)")
     execution_profile = session.execution_profile_clone_update(session.get_execution_profile(EXEC_PROFILE_DEFAULT))
     execution_profile.consistency_level = ConsistencyLevel.LOCAL_QUORUM
     session.execute(stmt, body.values(), execution_profile=execution_profile)
-    return {}
+    return json.dumps({})
     

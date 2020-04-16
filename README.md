@@ -6,8 +6,16 @@ This demo uses the documentation provided here https://docs.aws.amazon.com/mcs/l
 
 The Service Credentials are stored in Secrets Manager and post deploying the CF stack (generated with CDK) the deployspec uses the `infrastructure\set_secrets.sh` script to generated the Service Credentials for the IAM User CassandraDemoUser and stores them in secrets manager. These credentials are then used by the lambda when connecting to Cassandra.
 
-### General Info 
+Once the application is deployed (se below) to test it first load up some data then query it.
 
+````
+curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"country": "Sweden", "city_name": "Göteborg", "population": 600000}' \
+  https://<YOUR_API_ID>.execute-api.eu-west-1.amazonaws.com/prod/countries
+
+curl https://<YOUR_API_ID>.execute-api.eu-west-1.amazonaws.com/prod/countries?country=Sweden
+````
 
 ### Deploying using CodePipeline provided buildspecs
 

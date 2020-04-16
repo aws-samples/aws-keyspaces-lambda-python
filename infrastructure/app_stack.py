@@ -48,6 +48,7 @@ class AppStack(_core.Stack):
                                         'cassandra-demo',
                                         function_name='cassandra-demo',
                                         runtime=_lambda.Runtime.PYTHON_3_6,
+                                        memory_size=1024,
                                         code=code,
                                         handler='demo_handler.handler',
                                         tracing=_lambda.Tracing.ACTIVE,
