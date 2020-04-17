@@ -24,13 +24,13 @@ cluster = Cluster(['cassandra.{}.amazonaws.com'.format(AWS_DEFAULT_REGION)], por
 session = cluster.connect()
 
 def handler(event, context):
-    response = {'statusCode': 200}
+    response = {'statusCode': 405}
     if event['httpMethod'] in ['PUT', 'POST']:
-        response['body'] = do_upsert(json.loads(event['body']))
+        do_upsert(json.loads(event['body']))
+        response['statusCode'] = 201
     elif event['httpMethod'] == 'GET':
         response['body'] = do_get(event['queryStringParameters']['country'])
-    else:
-        response['statusCode'] = 405
+        response['statusCode'] = 200
     return response
 
 def do_get(country_name): 
@@ -46,5 +46,3 @@ def do_upsert(body):
     execution_profile = session.execution_profile_clone_update(session.get_execution_profile(EXEC_PROFILE_DEFAULT))
     execution_profile.consistency_level = ConsistencyLevel.LOCAL_QUORUM
     session.execute(stmt, body.values(), execution_profile=execution_profile)
-    return json.dumps({})
-    
