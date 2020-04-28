@@ -1,6 +1,6 @@
-# AWS Managed Cassandra Service Lambda Python Demo.
+# Amazon Keyspaces (for Apache Cassandra) Lambda Python Demo.
 
-This demo is to show how to deploy and use AWS Managed Cassandra Service from a python Lambda.
+This demo is to show how to deploy and use Amazon Keyspaces (for Apache Cassandra) from a python Lambda.
 
 This demo uses the documentation provided here https://docs.aws.amazon.com/mcs/latest/devguide/programmatic.html, sets it up and automates it.
 
