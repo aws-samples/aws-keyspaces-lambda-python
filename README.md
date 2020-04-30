@@ -17,55 +17,16 @@ curl --header "Content-Type: application/json" \
 curl https://<YOUR_API_ID>.execute-api.eu-west-1.amazonaws.com/prod/countries?country=Sweden
 ````
 
-### Deploying using CodePipeline provided buildspecs
+### Deploying 
 
-This example repo comes with a buildspec.yml and deployspec.yml that can be used by a code pipeline to package and deploy this example into a multi account setup. My prefered way of doing cross account deployment in AWS is with AWS Deployment Framework, https://github.com/awslabs/aws-deployment-framework. If you define the following pipeline in ADF your good to go. The deployspec depends on a deployment role beeing deployed `arn:aws:iam::$TARGET_ACCOUNT_ID:role/deploy-role-cassandra-demo`.
+To deploy this application into a AWS account you can use the `simple-deploy.sh` script provided. 
 
-ADF deployment-map.yml
-````yml
- pipelines:
-  - name: aws-mcs-lambda-python
-    default_providers:
-      source:
-        provider: codecommit               # Use CodeCommit or Github provider
-        properties:
-          account_id: 1234567890123        # Your CodeCommit account or config for github
-      build:
-        provider: codebuild
-        properties:
-          image: "STANDARD_2_0"
-      deploy:
-        provider: codebuild
-        properties:
-          image: "STANDARD_2_0"
-    targets:
-      - name: aws-mcs-lambda-python-deploy-stage # Use CodeCommit or Github provider
-        tags:
-          environment: sandbox                   # Target accounts using, account number, tags or organizations path
-          app: aws-mcs-lambda-python         
-        properties:
-          environment_variables: 
-            region: eu-west-1
+````bash 
+./simple-deploy.sh --profile your_aws_profile
 ````
-Deployment Role to use with an ADF Created deployment pipeline
+The profile `your_aws_profile` needs to have enough privilages to deploy the application.
+
 ````yml
- RateLimmitDemo:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName: deploy-role-rate-limit-demo
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Sid: AssumeRole
-            Principal:
-              AWS:
-                - !Sub arn:aws:iam::${DeploymentAccountId}:role/adf-codebuild-role
-                - !Sub arn:aws:iam::${DeploymentAccountId}:role/adf-codepipeline-role
-                - !Sub arn:aws:iam::${DeploymentAccountId}:role/adf-cloudformation-role
-            Action:
-              - sts:AssumeRole
-      Path: /
       Policies:
         - PolicyName: root
           PolicyDocument:
@@ -83,13 +44,6 @@ Deployment Role to use with an ADF Created deployment pipeline
                 - ssm:GetParameters
                 Resource:
                 - "*"
-````
-### Deploying quick & dirty
-
-If you dont have a multi account setup and want to deploy just from your local machine into your own personal account or into a sandbox account you can use the `simple-deploy.sh` script provided. 
-
-````bash 
-./simple-deploy.sh --profile your_aws_profile --region your_aws_region
 ````
 
 ## License
