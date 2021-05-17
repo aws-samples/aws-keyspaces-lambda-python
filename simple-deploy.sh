@@ -1,4 +1,4 @@
-npm install cdk@1.0.0 -y #1.33.0 version was not working
+npm install cdk@1.104.0 -y
 python3 -m venv venv/
 source venv/bin/activate
 cwd=$(pwd)
@@ -14,7 +14,8 @@ cp $cwd/lambda/../AmazonRootCA1.pem $cwd/lambda/AmazonRootCA1.pem #this file nee
 zip -r9 .dist/lambda.zip * -x ".dist"
 cd $cwd
 npx cdk synth
-npx cdk bootstrap aws://1234567/ap-south-1 #we need this line as well to work thing out
+AWS_ACCOUNT=$(aws sts get-caller-identity --query Account --output text)
+npx cdk bootstrap aws://${AWS_ACCOUNT}/${AWS_DEFAULT_REGION}
 npx cdk deploy $*
 cd infrastructure
 ./set_secrets.sh $*
